@@ -1,0 +1,11 @@
+CREATE DATABASE pry;
+
+use pry;
+
+CREATE TABLE project(
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  project_description VARCHAR(300)
+);
+
+SHOW TABLES;
