@@ -1,9 +1,7 @@
-const express = require('express')
-const routes = express.Router()
-
+const controller = {};
 const tableName = "project"
 
-routes.get('/', (req, res)=>{
+controller.listAll = (req, res)=>{
   req.getConnection((error, connection) => {
     if(error) return res.send(error)
     connection.query(`SELECT * FROM ${tableName}`, (error, rows)=>{
@@ -11,9 +9,19 @@ routes.get('/', (req, res)=>{
       res.json(rows)
     })
   })
-})
+}
 
-routes.post('/', (req, res)=>{
+controller.getById = (req, res)=>{
+  req.getConnection((error, connection) => {
+    if(error) return res.send(error)
+    connection.query(`SELECT * FROM ${tableName} WHERE id = ?`, [req.params.id], (error, rows)=>{
+      if(error) return res.send(error)
+      res.json(rows)
+    })
+  })
+}
+
+controller.create = (req, res)=>{
   req.getConnection((error, connection) => {
     if(error) return res.send(error)
     connection.query(`INSERT INTO ${tableName} set ?`, [req.body], (error, rows)=>{
@@ -21,9 +29,8 @@ routes.post('/', (req, res)=>{
       res.json(rows)
     })
   })
-})
-
-routes.delete('/:id', (req, res)=>{
+}
+controller.delete = (req, res)=>{
   req.getConnection((error, connection) => {
     if(error) return res.send(error)
     connection.query(`DELETE FROM ${tableName} WHERE id = ?`, [req.params.id], (error, rows)=>{
@@ -33,9 +40,8 @@ routes.delete('/:id', (req, res)=>{
       })
     })
   })
-})
-
-routes.put('/:id', (req, res)=>{
+}
+controller.update = (req, res)=>{
   req.getConnection((error, connection) => {
     if(error) return res.send(error)
     connection.query(
@@ -47,6 +53,6 @@ routes.put('/:id', (req, res)=>{
       }
     )
   })
-})
+}
 
-module.exports = routes
+module.exports = controller;
