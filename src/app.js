@@ -4,6 +4,7 @@ const myconnection = require('express-myconnection')
 const morgan = require('morgan')
 
 const routesProject = require('./routes/project-routes.js')
+const routesUser = require('./routes/user-routes.js')
 
 
 const app = express()
@@ -22,12 +23,12 @@ app.use(morgan('dev'))
 app.use(myconnection(mysql, dbOptions, 'single'))
 app.use(express.json())
 
-
 //ROUTES -----------
 app.get('/', (req, res)=>{
-  res.send("Welcome to esta webada")
+  res.send("Welcome to my backend in Node Js")
 })
 app.use('/projects', routesProject)
+app.use('/users', routesUser)
 
 // STATIC FILES
 
