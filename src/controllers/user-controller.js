@@ -11,17 +11,24 @@ controller.authenticate = (req, res)=>{
     if(error) return res.send(error)
     
     connection.query(
-      `SELECT * FROM ${tableName} WHERE username = ?`, 
-      [req.body.username], 
+      `SELECT * FROM ${tableName} WHERE email = ?`, [req.body.email], 
       async (error, rows)=>{
-
         if(error) return res.send(error)
 
         const user = rows[0]
 
         if(await bcrypt.compare(req.body.password, user.password)){
-          user.accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-          res.json(user)
+          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+          res.cookie('jwt', '', { 
+            httpOnly: true, 
+            sameSite: 'None', 
+            secure: true,
+            maxAge: 24*60*60*1000
+          });
+          res.json({
+            user: user,
+            accessToken: accessToken
+          })
         } else { 
           res.status(401).send("NOT ALLOWED!")
         }

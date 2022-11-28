@@ -5,7 +5,9 @@ const morgan = require('morgan')
 
 const routesProject = require('./routes/project-routes.js')
 const routesUser = require('./routes/user-routes.js')
-
+const credentials = require('../middlewares/credentials')
+const cors = require('cors');
+const corsOptions = require('../config/corsOptions')
 
 const app = express()
 app.set('port', process.env.PORT || 9000)
@@ -19,9 +21,12 @@ const dbOptions = {
 }
 
 //Middelwares
+app.use(credentials)
+app.use(cors(corsOptions))
 app.use(morgan('dev'))
 app.use(myconnection(mysql, dbOptions, 'single'))
 app.use(express.json())
+
 
 //ROUTES -----------
 app.get('/', (req, res)=>{
@@ -29,6 +34,7 @@ app.get('/', (req, res)=>{
 })
 app.use('/projects', routesProject)
 app.use('/users', routesUser)
+
 
 // STATIC FILES
 
